@@ -3,6 +3,7 @@ import { ExternalLink, Github, ArrowUpRight, Sparkles, CheckSquare, Calendar, Sh
 import { PROJECTS } from '../data/portfolioData';
 import { Project } from '../types/portfolio';
 import { ProjectModal } from './ProjectModal';
+import { ScrollReveal } from './ScrollReveal';
 
 export function Projects() {
   const [selectedFilter, setSelectedFilter] = useState<string>('All');
@@ -145,45 +146,47 @@ export function Projects() {
   return (
     <section id="projects" className="py-20 border-t border-slate-200/80 dark:border-slate-800/80">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div className="max-w-2xl">
-            <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
-              Featured Projects
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
-              Recent Engineering & Academic Works
-            </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
-              Selected front-end applications, full-stack systems, and core computer science implementations.
-            </p>
-          </div>
+        {/* Section Header with ScrollReveal */}
+        <ScrollReveal>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div className="max-w-2xl">
+              <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
+                Featured Projects
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+                Recent Engineering & Academic Works
+              </h2>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+                Selected front-end applications, full-stack systems, and core computer science implementations.
+              </p>
+            </div>
 
-          {/* Category Filter Tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-            {filterTabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setSelectedFilter(tab)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                  selectedFilter === tab
-                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+            {/* Category Filter Tabs */}
+            <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+              {filterTabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setSelectedFilter(tab)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                    selectedFilter === tab
+                      ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
-        {/* Project Cards Grid */}
+        {/* Project Cards Grid with staggered ScrollReveal */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="group rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md"
-            >
+          {filteredProjects.map((project, idx) => (
+            <ScrollReveal key={project.id} delayMs={(idx % 3) * 100} className="h-full">
+              <div
+                className="group rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-xs hover:shadow-md h-full"
+              >
               <div>
                 {/* Visual Showcase Graphic */}
                 {renderVisualCard(project)}
@@ -254,7 +257,8 @@ export function Projects() {
                 </div>
               </div>
             </div>
-          ))}
+          </ScrollReveal>
+        ))}
         </div>
       </div>
 

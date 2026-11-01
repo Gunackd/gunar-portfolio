@@ -1,6 +1,7 @@
 import React from 'react';
 import { GraduationCap, Code2, Compass, MapPin, Sparkles, UserCheck } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import { ScrollReveal } from './ScrollReveal';
 
 export function About() {
   const highlights = [
@@ -33,19 +34,21 @@ export function About() {
   return (
     <section id="about" className="py-20 border-t border-slate-200/80 dark:border-slate-800/80">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Section Header */}
-        <div className="mb-14 max-w-2xl">
-          <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
-            About Me
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
-            Passionate Front-End Developer with Computer Science Roots
-          </h2>
-        </div>
+        {/* Section Header with ScrollReveal */}
+        <ScrollReveal>
+          <div className="mb-14 max-w-2xl">
+            <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
+              About Me
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+              Passionate Front-End Developer with Computer Science Roots
+            </h2>
+          </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Bio & Story */}
-          <div className="lg:col-span-7 space-y-6">
+          <ScrollReveal delayMs={100} className="lg:col-span-7 space-y-6">
             <p className="text-base sm:text-lg text-slate-700 dark:text-slate-200 leading-relaxed">
               {PERSONAL_INFO.bioExtended}
             </p>
@@ -79,10 +82,10 @@ export function About() {
                 Beyond core coding, I have secondary competencies in graphic design, branding, and video editing through my creative brand <span className="font-semibold text-slate-900 dark:text-white">Infinity Visions</span>. This gives me strong visual intuition for typography, color balance, and smooth motion that directly enriches my front-end implementations.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Right Column: Profile Showcase & Highlights */}
-          <div className="lg:col-span-5 space-y-6">
+          <ScrollReveal delayMs={200} className="lg:col-span-5 space-y-6">
             {/* Developer Card & Avatar */}
             <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-[#0F1117] border border-slate-800 text-white shadow-xl relative overflow-hidden">
               <div
@@ -148,7 +151,7 @@ export function About() {
                 </div>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

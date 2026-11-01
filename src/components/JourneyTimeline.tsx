@@ -1,6 +1,7 @@
 import React from 'react';
 import { GraduationCap, Code2, Rocket, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { JOURNEY_MILESTONES } from '../data/portfolioData';
+import { ScrollReveal } from './ScrollReveal';
 
 export function JourneyTimeline() {
   const milestoneIcons = [GraduationCap, Code2, Rocket, RefreshCw];
@@ -8,37 +9,40 @@ export function JourneyTimeline() {
   return (
     <section id="journey" className="py-20 border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-[#08090D]">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Section Header */}
-        <div className="mb-14 max-w-2xl">
-          <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
-            Evolution & Education
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
-            Learning Journey & Milestones
-          </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
-            A transparent timeline of academic training, hands-on project development, and progressive mastery of the front-end ecosystem.
-          </p>
-        </div>
+        {/* Section Header with ScrollReveal */}
+        <ScrollReveal>
+          <div className="mb-14 max-w-2xl">
+            <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
+              Evolution & Education
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+              Learning Journey & Milestones
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">
+              A transparent timeline of academic training, hands-on project development, and progressive mastery of the front-end ecosystem.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Timeline Container */}
         <div className="relative border-l border-slate-200 dark:border-slate-800 ml-4 md:ml-32 space-y-12">
           {JOURNEY_MILESTONES.map((milestone, idx) => {
             const IconComponent = milestoneIcons[idx % milestoneIcons.length];
             return (
-              <div key={milestone.title} className="relative pl-8 md:pl-10 group">
-                {/* Timeline node marker */}
-                <div className="absolute -left-[17px] top-1.5 w-8 h-8 rounded-full bg-white dark:bg-[#08090D] border-2 border-blue-600 dark:border-blue-500 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm">
-                  <IconComponent className="w-3.5 h-3.5" />
-                </div>
+              <ScrollReveal key={milestone.title} delayMs={idx * 100}>
+                <div className="relative pl-8 md:pl-10 group">
+                  {/* Timeline node marker */}
+                  <div className="absolute -left-[17px] top-1.5 w-8 h-8 rounded-full bg-white dark:bg-[#08090D] border-2 border-blue-600 dark:border-blue-500 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm">
+                    <IconComponent className="w-3.5 h-3.5" />
+                  </div>
 
-                {/* Left side desktop year label */}
-                <div className="hidden md:block absolute -left-36 top-2 w-28 text-right font-mono text-xs text-slate-400 dark:text-slate-500 font-semibold">
-                  {milestone.year}
-                </div>
+                  {/* Left side desktop year label */}
+                  <div className="hidden md:block absolute -left-36 top-2 w-28 text-right font-mono text-xs text-slate-400 dark:text-slate-500 font-semibold">
+                    {milestone.year}
+                  </div>
 
-                {/* Content Box */}
-                <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 shadow-xs">
+                  {/* Content Box */}
+                  <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 shadow-xs">
                   {/* Mobile Year Badge */}
                   <div className="md:hidden inline-block text-xs font-mono text-blue-600 dark:text-blue-400 font-semibold mb-2">
                     {milestone.year}
@@ -69,8 +73,9 @@ export function JourneyTimeline() {
                   </div>
                 </div>
               </div>
-            );
-          })}
+            </ScrollReveal>
+          );
+        })}
         </div>
       </div>
     </section>

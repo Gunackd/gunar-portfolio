@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, MapPin, Send, CheckCircle2, Copy, Check, Github, Linkedin, MessageSquare, ArrowUpRight } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import { ScrollReveal } from './ScrollReveal';
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -59,8 +60,8 @@ export function Contact() {
     <section id="contact" className="py-20 border-t border-slate-200/80 dark:border-slate-800/80">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Direct Inquiries & Details */}
-          <div className="lg:col-span-5 space-y-6">
+          {/* Left Column: Direct Inquiries & Details with ScrollReveal */}
+          <ScrollReveal className="lg:col-span-5 space-y-6">
             <div>
               <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
                 Get In Touch
@@ -145,10 +146,10 @@ export function Contact() {
                 </a>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
-          {/* Right Column: Functional Contact Form */}
-          <div className="lg:col-span-7">
+          {/* Right Column: Functional Contact Form with ScrollReveal */}
+          <ScrollReveal delayMs={150} className="lg:col-span-7">
             <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 shadow-sm relative">
               {isSubmitted ? (
                 <div className="text-center py-12 space-y-4 animate-in fade-in zoom-in-95 duration-200">
@@ -289,7 +290,7 @@ export function Contact() {
                 </form>
               )}
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

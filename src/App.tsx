@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { ScrollProgress } from './components/ScrollProgress';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -36,6 +37,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#08090D] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+      {/* Scroll Progress Bar at the top of the window */}
+      <ScrollProgress />
+
       {/* Top Navigation */}
       <Navbar
         onOpenResume={() => setIsResumeOpen(true)}

@@ -10,15 +10,9 @@ interface NavbarProps {
 export function Navbar({ onOpenResume, isDark, toggleTheme }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        setScrollProgress((window.scrollY / totalScroll) * 100);
-      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -34,13 +28,6 @@ export function Navbar({ onOpenResume, isDark, toggleTheme }: NavbarProps) {
 
   return (
     <>
-      {/* Scroll Progress Bar */}
-      <div
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 z-50 transition-all duration-150"
-        style={{ width: `${scrollProgress}%` }}
-        aria-hidden="true"
-      />
-
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled
