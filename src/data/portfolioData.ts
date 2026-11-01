@@ -2,7 +2,8 @@ import { Project, SkillCategory, JourneyMilestone, CreativeItem } from '../types
 
 export const PERSONAL_INFO = {
   name: 'Guna R',
-  title: 'Front-End Developer | React.js Developer',
+  title: 'Front-End Developer | React.js',
+  roleTag: 'React Developer',
   headline: 'Building Modern Web Experiences with React.',
   education: 'M.Sc. Computer Science',
   location: 'Bangalore, India',
@@ -14,7 +15,7 @@ export const PERSONAL_INFO = {
   bioIntro: `I'm a passionate Front-End Developer focused on creating responsive, interactive, and user-friendly web applications. I enjoy transforming ideas into functional digital experiences using modern web technologies.`,
   bioExtended: `I enjoy building modern web applications, exploring new technologies, and solving problems through code. My focus is on writing clean, maintainable code and creating responsive user interfaces that deliver great user experiences.`,
   careerGoals: `Seeking an entry-level Front-End Developer role where I can contribute to high-impact user experiences, apply React best practices, write resilient code, and grow within a collaborative engineering culture.`,
-  availability: 'Available for full-time opportunities',
+  availability: 'Open to Front-End Developer Opportunities',
 };
 
 export const SKILL_CATEGORIES: SkillCategory[] = [

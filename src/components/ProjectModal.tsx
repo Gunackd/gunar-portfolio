@@ -144,16 +144,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Modal Footer with Actions */}
         <div className="p-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 bg-slate-50 dark:bg-slate-900/50">
           <div className="flex items-center gap-3">
-            {project.liveUrl && project.liveUrl !== '#' && (
+            {project.liveUrl && project.liveUrl !== '#' ? (
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors"
               >
-                <span>Visit Live Demo</span>
+                <span>Visit Live Agency Demo</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/40 text-emerald-300 border border-emerald-800/50 text-xs font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Interactive In-App Simulator Active</span>
+              </span>
             )}
 
             {project.githubUrl && (

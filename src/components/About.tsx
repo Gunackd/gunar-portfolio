@@ -106,7 +106,7 @@ export function About() {
                     Guna R
                     <UserCheck className="w-4 h-4 text-emerald-400" />
                   </h3>
-                  <p className="text-xs text-blue-400 font-medium">Front-End Developer</p>
+                  <p className="text-xs text-blue-400 font-medium">Front-End Developer · React Developer</p>
                   <p className="text-xs text-slate-400 mt-0.5">Bangalore, Karnataka, India</p>
                 </div>
               </div>

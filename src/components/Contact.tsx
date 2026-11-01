@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, MapPin, Send, CheckCircle2, Copy, Check, Github, Linkedin, MessageSquare, ArrowUpRight } from 'lucide-react';
+import { Mail, MapPin, Send, CheckCircle2, Copy, Check, Github, Linkedin, MessageSquare, ArrowUpRight, AlertCircle, RefreshCw } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { ScrollReveal } from './ScrollReveal';
 
@@ -12,36 +12,66 @@ export function Contact() {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!formData.name.trim()) errs.name = 'Please provide your name.';
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      errs.name = 'Please provide your name (at least 2 characters).';
+    }
     if (!formData.email.trim()) {
       errs.email = 'Please provide your email address.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       errs.email = 'Please provide a valid email address.';
     }
-    if (!formData.subject.trim()) errs.subject = 'Please specify a subject.';
-    if (!formData.message.trim() || formData.message.length < 10) {
+    if (!formData.subject.trim() || formData.subject.trim().length < 3) {
+      errs.subject = 'Please specify a subject (at least 3 characters).';
+    }
+    if (!formData.message.trim() || formData.message.trim().length < 10) {
       errs.message = 'Please write a message of at least 10 characters.';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
-    setIsSubmitting(true);
-    // Simulate real client submission latency
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 700);
+    setSubmitStatus('loading');
+    setErrorMessage('');
+
+    try {
+      // Direct submission to FormSubmit endpoint forwarding to gunackd@gmail.com
+      const response = await fetch(`https://formsubmit.co/ajax/${PERSONAL_INFO.email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          _subject: `[Portfolio Contact] ${formData.subject}`,
+          message: formData.message,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+      } else {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || 'Server returned an error. Please try again or email directly.');
+      }
+    } catch (err: any) {
+      // In case of ad-blocker or network interruption, present clear error state with fallback
+      setSubmitStatus('error');
+      setErrorMessage(
+        err?.message || 'Could not send message over network. You can launch your email client directly below.'
+      );
+    }
   };
 
   const handleCopyEmail = () => {
@@ -51,7 +81,7 @@ export function Contact() {
   };
 
   const mailtoHref = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(
-    formData.subject || 'Portfolio Inquiry for Guna R'
+    formData.subject || 'Front-End Developer Role / Project Inquiry'
   )}&body=${encodeURIComponent(
     `Hi Guna,\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
   )}`;
@@ -60,7 +90,7 @@ export function Contact() {
     <section id="contact" className="py-20 border-t border-slate-200/80 dark:border-slate-800/80">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Direct Inquiries & Details with ScrollReveal */}
+          {/* Left Column: Direct Inquiries & Verified Details */}
           <ScrollReveal className="lg:col-span-5 space-y-6">
             <div>
               <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
@@ -70,7 +100,7 @@ export function Contact() {
                 Have a project in mind? Let's build something great.
               </h2>
               <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed">
-                I'm actively seeking entry-level Front-End Developer opportunities in Bangalore and remote teams. Whether you have an open position, an exciting project, or simply want to connect, feel free to reach out.
+                I'm actively seeking entry-level Front-End Developer opportunities in Bangalore, hybrid teams, and remote roles. Whether you have an open position, a freelance project, or want to connect, feel free to reach out.
               </p>
             </div>
 
@@ -96,8 +126,9 @@ export function Contact() {
                 <button
                   type="button"
                   onClick={handleCopyEmail}
-                  className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors shrink-0"
+                  className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors shrink-0 cursor-pointer"
                   title="Copy email to clipboard"
+                  aria-label="Copy email address"
                 >
                   {copiedEmail ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                 </button>
@@ -117,7 +148,7 @@ export function Contact() {
               </div>
             </div>
 
-            {/* Social Links */}
+            {/* Verified Social Links */}
             <div className="pt-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block mb-3">
                 Connect Across Platforms
@@ -128,6 +159,7 @@ export function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-800 dark:text-slate-200 transition-colors"
+                  aria-label="LinkedIn Profile"
                 >
                   <Linkedin className="w-4 h-4 text-[#0077b5]" />
                   <span>LinkedIn</span>
@@ -139,6 +171,7 @@ export function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-800 dark:text-slate-200 transition-colors"
+                  aria-label="GitHub Profile"
                 >
                   <Github className="w-4 h-4" />
                   <span>GitHub</span>
@@ -148,11 +181,12 @@ export function Contact() {
             </div>
           </ScrollReveal>
 
-          {/* Right Column: Functional Contact Form with ScrollReveal */}
+          {/* Right Column: Functional Contact Form with Full States */}
           <ScrollReveal delayMs={150} className="lg:col-span-7">
             <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 shadow-sm relative">
-              {isSubmitted ? (
-                <div className="text-center py-12 space-y-4 animate-in fade-in zoom-in-95 duration-200">
+              {/* Success State */}
+              {submitStatus === 'success' && (
+                <div className="text-center py-10 space-y-4 animate-in fade-in zoom-in-95 duration-200">
                   <div className="w-14 h-14 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
@@ -160,37 +194,74 @@ export function Contact() {
                     Message Sent Successfully!
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
-                    Thank you, <span className="font-semibold text-slate-900 dark:text-white">{formData.name}</span>. Your message has been prepared. You can also send it directly via your mail client:
+                    Thank you, <span className="font-semibold text-slate-900 dark:text-white">{formData.name}</span>. Your message has been sent to Guna R at <span className="font-mono text-blue-500">{PERSONAL_INFO.email}</span>. You will receive a response shortly.
                   </p>
                   <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
                     <a
                       href={mailtoHref}
                       className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors"
                     >
-                      Open Email Client Directly
+                      Open Email Client
                     </a>
                     <button
                       type="button"
                       onClick={() => {
-                        setIsSubmitted(false);
+                        setSubmitStatus('idle');
                         setFormData({ name: '', email: '', subject: '', message: '' });
                       }}
-                      className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700"
+                      className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer"
                     >
                       Send Another Message
                     </button>
                   </div>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
+              )}
+
+              {/* Error State */}
+              {submitStatus === 'error' && (
+                <div className="py-6 space-y-4 animate-in fade-in duration-200">
+                  <div className="p-4 rounded-xl bg-rose-950/30 border border-rose-800/50 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <h4 className="text-xs font-semibold text-rose-200">Message Delivery Alert</h4>
+                      <p className="text-xs text-rose-300/90 leading-relaxed">{errorMessage}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-3 pt-1">
+                    <a
+                      href={mailtoHref}
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors"
+                    >
+                      <Mail className="w-4 h-4" />
+                      <span>Send Directly via Email Client</span>
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => setSubmitStatus('idle')}
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Edit & Retry Form</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Form State (Idle / Loading) */}
+              {(submitStatus === 'idle' || submitStatus === 'loading') && (
+                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Name */}
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                      <label htmlFor="contact-name" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                         Your Name *
                       </label>
                       <input
+                        id="contact-name"
                         type="text"
+                        required
                         value={formData.name}
                         onChange={(e) => {
                           setFormData({ ...formData, name: e.target.value });
@@ -208,11 +279,13 @@ export function Contact() {
 
                     {/* Email */}
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                      <label htmlFor="contact-email" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                         Your Email *
                       </label>
                       <input
+                        id="contact-email"
                         type="email"
+                        required
                         value={formData.email}
                         onChange={(e) => {
                           setFormData({ ...formData, email: e.target.value });
@@ -231,11 +304,13 @@ export function Contact() {
 
                   {/* Subject */}
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    <label htmlFor="contact-subject" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                       Subject *
                     </label>
                     <input
+                      id="contact-subject"
                       type="text"
+                      required
                       value={formData.subject}
                       onChange={(e) => {
                         setFormData({ ...formData, subject: e.target.value });
@@ -253,11 +328,13 @@ export function Contact() {
 
                   {/* Message */}
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    <label htmlFor="contact-message" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                       Message *
                     </label>
                     <textarea
+                      id="contact-message"
                       rows={5}
+                      required
                       value={formData.message}
                       onChange={(e) => {
                         setFormData({ ...formData, message: e.target.value });
@@ -275,11 +352,14 @@ export function Contact() {
 
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/20"
+                    disabled={submitStatus === 'loading'}
+                    className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-60 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/20 cursor-pointer"
                   >
-                    {isSubmitting ? (
-                      <span>Sending message...</span>
+                    {submitStatus === 'loading' ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Sending message...</span>
+                      </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />

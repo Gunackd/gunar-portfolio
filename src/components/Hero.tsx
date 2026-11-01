@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, Download, Mail, Code2, Sparkles, Terminal, Copy, Check, Globe } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
@@ -6,19 +6,58 @@ interface HeroProps {
   onOpenResume: () => void;
 }
 
+const TYPING_PHRASES = [
+  'Building Modern Web Experiences with React.',
+  'Crafting Responsive & High-Performance UIs.',
+  'Transforming Ideas into Clean, Maintainable Code.',
+];
+
 export function Hero({ onOpenResume }: HeroProps) {
   const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview');
   const [copied, setCopied] = useState(false);
 
+  // Subtle typing animation state
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentPhrase = TYPING_PHRASES[phraseIndex];
+    const typingSpeed = isDeleting ? 30 : 60;
+
+    let timeout: NodeJS.Timeout;
+
+    if (!isDeleting && displayText === currentPhrase) {
+      // Pause at full phrase
+      timeout = setTimeout(() => {
+        setIsDeleting(true);
+      }, 2400);
+    } else if (isDeleting && displayText === '') {
+      // Switch to next phrase
+      setIsDeleting(false);
+      setPhraseIndex((prev) => (prev + 1) % TYPING_PHRASES.length);
+    } else {
+      timeout = setTimeout(() => {
+        setDisplayText((prev) =>
+          isDeleting
+            ? currentPhrase.substring(0, prev.length - 1)
+            : currentPhrase.substring(0, prev.length + 1)
+        );
+      }, typingSpeed);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, phraseIndex]);
+
   const codeSnippet = `// Guna R – Front-End Developer
 const developerProfile = {
   name: "Guna R",
-  role: "Front-End Developer",
+  role: "Front-End Developer | React.js",
   specialization: "React.js & Modern Web Standards",
   education: "M.Sc. Computer Science",
   location: "Bangalore, India",
   coreStack: ["React 19", "JavaScript (ES6+)", "Tailwind CSS", "Vite"],
-  status: "Ready for high-impact front-end challenges",
+  status: "Open to Front-End Developer Opportunities",
   buildPhilosophy: () => "Clean code, responsive UI, zero bloat"
 };`;
 
@@ -47,7 +86,7 @@ const developerProfile = {
             {/* Availability Indicator & Degree */}
             <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 dark:text-slate-400">
               <span className="font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                {PERSONAL_INFO.title}
+                FRONT-END DEVELOPER | REACT.JS
               </span>
               <span aria-hidden="true">·</span>
               <span>{PERSONAL_INFO.education}</span>
@@ -55,14 +94,17 @@ const developerProfile = {
               <span>{PERSONAL_INFO.location}</span>
             </div>
 
-            {/* Main Heading */}
+            {/* Main Heading & Headline with Typing Animation */}
             <div className="space-y-3">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
                 Hi, I'm <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 bg-clip-text text-transparent">Guna R.</span>
               </h1>
-              <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 dark:text-slate-200">
-                {PERSONAL_INFO.headline}
-              </p>
+              <div className="min-h-[2.75rem] flex items-center">
+                <p className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800 dark:text-slate-200">
+                  <span>{displayText}</span>
+                  <span className="inline-block w-[3px] h-6 sm:h-7 ml-1 bg-blue-500 animate-pulse align-middle" aria-hidden="true" />
+                </p>
+              </div>
             </div>
 
             {/* Description */}
@@ -91,7 +133,7 @@ const developerProfile = {
               <button
                 type="button"
                 onClick={onOpenResume}
-                className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl transition-all"
+                className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl transition-all cursor-pointer"
               >
                 <Download className="w-4 h-4 text-blue-500" />
                 <span>Download Resume</span>
@@ -154,7 +196,7 @@ const developerProfile = {
                         Guna R
                         <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                       </h3>
-                      <p className="text-xs text-slate-400">Front-End Developer · React Specialist</p>
+                      <p className="text-xs text-slate-400">Front-End Developer · React Developer</p>
                       <p className="text-xs text-slate-400">Bangalore, India</p>
                     </div>
                   </div>
@@ -185,7 +227,7 @@ const developerProfile = {
                   <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs text-slate-400">
                     <span className="flex items-center gap-1.5 text-emerald-400">
                       <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                      Open to Entry-Level Opportunities
+                      Open to Front-End Developer Opportunities
                     </span>
                     <a
                       href="#projects"

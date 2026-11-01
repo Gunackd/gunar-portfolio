@@ -13,7 +13,7 @@ export function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   if (!isOpen) return null;
 
   const plainTextResume = `=====================================================
-GUNA R – FRONT-END DEVELOPER | REACT.JS SPECIALIST
+GUNA R – FRONT-END DEVELOPER | REACT.JS
 Bangalore, India | gunackd@gmail.com
 GitHub: https://github.com/gunackd | LinkedIn: https://linkedin.com/in/gunar-dev
 =====================================================
@@ -262,7 +262,7 @@ SECONDARY CREATIVE SKILLS
         {/* Modal Bottom Bar */}
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 flex justify-between items-center no-print">
           <span className="text-xs text-slate-500">
-            Available for full-time Front-End Developer roles in Bangalore & remote
+            Open to Front-End Developer Opportunities in Bangalore & Remote
           </span>
           <button
             onClick={onClose}
